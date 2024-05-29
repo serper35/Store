@@ -25,4 +25,11 @@ public class Ad {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User author;
+
+    public Ad(User author, String title, int price, String description) {
+        this.author = author;
+        this.title = title;
+        this.price = price;
+        this.description = description;
+    }
 }
