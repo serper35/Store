@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
@@ -27,7 +26,6 @@ import java.io.IOException;
 public class AdController {
 
     private final AdService adService;
-    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<AdsDTO> getAllAds() {
@@ -77,7 +75,7 @@ public class AdController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<AdDTO> updateAds(@PathVariable int id,
-                                           @RequestBody CreateOrUpdateAdDTO properties,
+                                           @RequestParam CreateOrUpdateAdDTO properties,
                                            Authentication authentication) {
         if (authentication.isAuthenticated()) {
             ExtendedAdDTO foundAd = adService.getAds(id);
@@ -88,6 +86,33 @@ public class AdController {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
             return ResponseEntity.ok(adService.updateAds(id, properties));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<AdsDTO> getAdsMe(Authentication authentication) {
+        if (authentication.isAuthenticated()) {
+            return ResponseEntity.ok(adService.getAdsMe(authentication.getName()));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PatchMapping(value = "{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> updateImage(@PathVariable int id,
+                                         @RequestParam MultipartFile image,
+                                         Authentication authentication) throws IOException {
+        if (authentication.isAuthenticated()) {
+            ExtendedAdDTO foundAd = adService.getAds(id);
+            if (foundAd == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            if (!UserValidate.isAdminOrOwner(authentication, foundAd.getEmail())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            return ResponseEntity.ok(adService.updateImage(id, image));
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

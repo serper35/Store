@@ -15,7 +15,9 @@ import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -33,9 +35,9 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdDTO add(CreateOrUpdateAdDTO properties, MultipartFile image, String email) {
+    public AdDTO add(CreateOrUpdateAdDTO properties, MultipartFile image, String email) throws IOException {
         Ad ad = adMapper.createOrUpdateAdToAd(properties, userService.getUser(email));
-        ad.setImage(imageService.saveImage(image));
+        ad.setImage(imageService.uploadImage(ad.getPk(), image));
         return adMapper.modelToAdDTO(adRepository.save(ad));
     }
 
@@ -56,5 +58,22 @@ public class AdServiceImpl implements AdService {
         ad.setPrice(properties.getPrice());
         ad.setDescription(properties.getDescription());
         return adMapper.modelToAdDTO(adRepository.save(ad));
+    }
+
+    @Override
+    public AdsDTO getAdsMe(String email) {
+        int userId = userService.getUser(email).getId();
+        List<Ad> myAds = adRepository.findAll()
+                .stream()
+                .filter(ad -> ad.getAuthor().getId() == userId)
+                .collect(Collectors.toList());
+        return new AdsDTO(myAds.size(), myAds);
+    }
+
+    @Override
+    public String[] updateImage(int id, MultipartFile image) throws IOException {
+        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
+        ad.setImage(imageService.uploadImage(ad.getPk(), image));
+        return new String[] {adRepository.save(ad).getImage().getImageURI()};
     }
 }
