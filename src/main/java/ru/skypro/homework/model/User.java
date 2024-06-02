@@ -1,18 +1,20 @@
 package ru.skypro.homework.model;
 
-import lombok.*;
+import lombok.Data;
+import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "users")
+@Entity(name = "users")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private int id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String phone;
+    private Role role;
+    private String image;
 }
