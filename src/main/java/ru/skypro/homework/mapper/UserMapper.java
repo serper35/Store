@@ -6,11 +6,15 @@ import ru.skypro.homework.model.User;
 
 @Component
 public class UserMapper {
-        public UserDTO mapToDto(User user) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setFirstName(user.getFirstName());
-            userDTO.setLastName(user.getLastName());
-            userDTO.setPhone(user.getPhone());
-            return userDTO;
-        }
+    public UserDTO mapToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setLastName(user.getLastName());
+        userDTO.setPhone(user.getPhone());
+        userDTO.setRole(user.getRole());
+        userDTO.setImage(user.getImage());
+        return userDTO;
+    }
 }

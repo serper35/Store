@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
+import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
+import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.service.UserService;
 
@@ -28,15 +30,16 @@ public class UserController {
     //    Есть dto Register, который уже имеет все поля, созданные мною в классе User. А нужен ли User?
     //    А может User должен содержать в себе Register? (не логично, но все же)
     @GetMapping("me")
-    public ResponseEntity<User> getMe() {
-        User user = userService.getMe();
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserDTO> getMe() {
+        UserMapper mapper = new UserMapper();
+        UserDTO userDTO = mapper.mapToUserDTO(userService.getMe());
+        return ResponseEntity.ok(userDTO);
     }
 
     // Обновление информации об авторизованном пользователе (200/401)
     @PatchMapping("me")
-    public ResponseEntity<UserDTO> patchMe() {
-        return ResponseEntity.ok(new UserDTO());
+    public ResponseEntity<UpdateUser> patchMe() {
+        return ResponseEntity.ok(new UpdateUser());
     }
 
     // Обновление аватара авторизованного пользователя (200/401)

@@ -13,4 +13,13 @@ public class UserServiceImpl implements UserService {
         user.setPhone("+7(911)123-3210");
         return user;
     }
+
+    @Override
+    public User getUser(String email) {
+        User user = new User();
+        user.setFirstName("UserFirstName");
+        user.setLastName("UserLastName");
+        user.setPhone("+7(911)123-3210");
+        return user;
+    }
 }
