@@ -13,7 +13,6 @@ import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.service.AdService;
-import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.util.UserValidate;
 
 import java.io.IOException;
