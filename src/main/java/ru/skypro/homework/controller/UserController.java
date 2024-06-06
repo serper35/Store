@@ -45,6 +45,7 @@ public class UserController {
     // Обновление аватара авторизованного пользователя (200/401)
     @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> setAvatar(@RequestBody MultipartFile avatar) {
+
         return ResponseEntity.status(200).build();
     }
 
