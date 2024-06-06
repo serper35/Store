@@ -25,6 +25,7 @@ public class WebSecurityConfig {
             "/register"
     };
 
+//    In-memory users
     @Bean
     public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
         UserDetails user =
@@ -34,7 +35,14 @@ public class WebSecurityConfig {
                         .passwordEncoder(passwordEncoder::encode)
                         .roles(Role.USER.name())
                         .build();
-        return new InMemoryUserDetailsManager(user);
+        UserDetails admin =
+                User.builder()
+                        .username("admin@gmail.com")
+                        .password("password")
+                        .passwordEncoder(passwordEncoder::encode)
+                        .roles(Role.ADMIN.name())
+                        .build();
+        return new InMemoryUserDetailsManager(user, admin);
     }
 
     @Bean
