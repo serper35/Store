@@ -30,7 +30,10 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdsDTO getAllAds() {
-        List<Ad> ads = adRepository.findAll();
+        List<AdDTO> ads = adRepository.findAll()
+                .stream()
+                .map(adMapper::modelToAdDTO)
+                .collect(Collectors.toList());
         return new AdsDTO(ads.size(), ads);
     }
 
@@ -63,9 +66,10 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdsDTO getAdsMe(String email) {
         int userId = userService.getUser(email).getId();
-        List<Ad> myAds = adRepository.findAll()
+        List<AdDTO> myAds = adRepository.findAll()
                 .stream()
                 .filter(ad -> ad.getAuthor().getId() == userId)
+                .map(adMapper::modelToAdDTO)
                 .collect(Collectors.toList());
         return new AdsDTO(myAds.size(), myAds);
     }
