@@ -22,13 +22,23 @@ public class ImageServiceImpl implements ImageService {
     @Value("${path.to.images.folder}")
     private String imagesDir;
 
+    @Value("${path.to.avatars.folder}")
+    private String avatarsDir;
+
     private final ImageRepository imageRepository;
 
     @Override
     public Image uploadImage(int id, MultipartFile file) throws IOException {
         Image image = new Image();
+        String dir;
+        if (Thread.currentThread().getStackTrace()[2].getClassName().equals("AdServiceImpl")) {
+            dir = imagesDir;
+        }
+        else {
+            dir = avatarsDir;
+        }
         if (file.getOriginalFilename() != null) {
-            Path filePath = Path.of(imagesDir, id + "." + getExtension(file.getOriginalFilename()));
+            Path filePath = Path.of(dir, id + "." + getExtension(file.getOriginalFilename()));
             Files.createDirectories(filePath.getParent());
             Files.deleteIfExists(filePath);
 
@@ -36,7 +46,7 @@ public class ImageServiceImpl implements ImageService {
                     InputStream is = file.getInputStream();
                     OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
                     BufferedInputStream bis = new BufferedInputStream(is, 2048);
-                    BufferedOutputStream bos = new BufferedOutputStream(os, 2048);
+                    BufferedOutputStream bos = new BufferedOutputStream(os, 2048)
             ) {
                 bis.transferTo(bos);
             }
