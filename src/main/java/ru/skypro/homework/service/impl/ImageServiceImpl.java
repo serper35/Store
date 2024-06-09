@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.exception.ImageNotFoundException;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.ImageService;
@@ -51,10 +52,17 @@ public class ImageServiceImpl implements ImageService {
                 bis.transferTo(bos);
             }
             image.setImageURI(filePath.toUri().getPath());
+            image.setMediaType(file.getContentType());
+            image.setFileSize(file.getSize());
 
             return imageRepository.save(image);
         }
         return null;
+    }
+
+    @Override
+    public Image getImage(int id) {
+        return imageRepository.findById(id).orElseThrow(ImageNotFoundException::new);
     }
 
     private String getExtension(String originalFilename) {
