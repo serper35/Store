@@ -11,8 +11,13 @@ import ru.skypro.homework.model.User;
 @Component
 public class AdMapper {
     public AdDTO modelToAdDTO(Ad model) {
-        // todo Добавить параметры, когда будут написаны соответствующие модели (User, Image)
-        return new AdDTO(/*model.getPk(),...*/);
+        return new AdDTO(
+                model.getAuthor().getId(),
+                model.getImage().getId() + "",
+                model.getPk(),
+                model.getPrice(),
+                model.getTitle()
+        );
     }
 
     public Ad createOrUpdateAdToAd(CreateOrUpdateAdDTO dto, User author) {
@@ -20,16 +25,15 @@ public class AdMapper {
     }
 
     public ExtendedAdDTO modelToExtendedAdDTO(Ad model) {
-        //User author = model.getAuthor();
+        User author = model.getAuthor();
         Image image = model.getImage();
-        // todo Добавить данные из класса User, когда он будет готов
         return new ExtendedAdDTO(model.getPk(),
-                "AuthorFirstName", //author.getAuthorFirstName(),
-                "AuthorLastName", //author.getAuthorLastName(),
+                author.getFirstName(),
+                author.getLastName(),
                 model.getDescription(),
-                "AuthorEmail", //author.getEmail(),
-                image.getImageURI(),
-                "89999999999", //author.getPhone(),
+                author.getEmail(),
+                image.getId() + "",
+                author.getPhone(),
                 model.getPrice(),
                 model.getTitle()
         );
