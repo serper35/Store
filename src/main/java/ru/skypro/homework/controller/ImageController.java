@@ -1,17 +1,14 @@
 package ru.skypro.homework.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.service.ImageService;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -23,19 +20,13 @@ public class ImageController {
     private final ImageService imageService;
 
     @GetMapping("/{id}")
-    public void getImage(@PathVariable int id, HttpServletResponse response) throws IOException {
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) {
         Image image = imageService.getImage(id);
 
-        Path path = Path.of(image.getImageURI());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.parseMediaType(image.getMediaType()));
+        httpHeaders.setContentLength(image.getData().length);
 
-        try (
-                InputStream is = Files.newInputStream(path);
-                OutputStream os = response.getOutputStream();
-        ) {
-            response.setStatus(200);
-            response.setContentType(image.getMediaType());
-            response.setContentLength((int) image.getFileSize());
-            is.transferTo(os);
-        }
+        return ResponseEntity.status(HttpStatus.OK).headers(httpHeaders).body(image.getData());
     }
 }

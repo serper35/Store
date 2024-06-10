@@ -40,7 +40,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdDTO add(CreateOrUpdateAdDTO properties, MultipartFile image, String email) throws IOException {
         Ad ad = adMapper.createOrUpdateAdToAd(properties, userService.getUser(email));
-        ad.setImage(imageService.uploadImage(ad.getPk(), image));
+        ad.setImage(imageService.uploadImage(image));
         return adMapper.modelToAdDTO(adRepository.save(ad));
     }
 
@@ -77,7 +77,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public String[] updateImage(int id, MultipartFile image) throws IOException {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
-        ad.setImage(imageService.uploadImage(ad.getPk(), image));
-        return new String[] {adRepository.save(ad).getImage().getImageURI()};
+        ad.setImage(imageService.uploadImage(image));
+        return new String[] {adRepository.save(ad).getImage().getId() + ""};
     }
 }
