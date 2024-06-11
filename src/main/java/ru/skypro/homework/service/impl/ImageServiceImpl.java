@@ -1,7 +1,6 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -10,54 +9,26 @@ import ru.skypro.homework.model.Image;
 import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.ImageService;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static java.nio.file.StandardOpenOption.CREATE_NEW;
+import java.util.Objects;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
-    @Value("${path.to.images.folder}")
-    private String imagesDir;
-
-    @Value("${path.to.avatars.folder}")
-    private String avatarsDir;
 
     private final ImageRepository imageRepository;
 
     @Override
-    public Image uploadImage(int id, MultipartFile file) throws IOException {
+    public Image uploadImage(MultipartFile file) throws IOException {
         Image image = new Image();
-        String dir;
-        if (Thread.currentThread().getStackTrace()[2].getClassName().equals("AdServiceImpl")) {
-            dir = imagesDir;
-        }
-        else {
-            dir = avatarsDir;
-        }
-        if (file.getOriginalFilename() != null) {
-            Path filePath = Path.of(dir, id + "." + getExtension(file.getOriginalFilename()));
-            Files.createDirectories(filePath.getParent());
-            Files.deleteIfExists(filePath);
-
-            try (
-                    InputStream is = file.getInputStream();
-                    OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
-                    BufferedInputStream bis = new BufferedInputStream(is, 2048);
-                    BufferedOutputStream bos = new BufferedOutputStream(os, 2048)
-            ) {
-                bis.transferTo(bos);
-            }
-            image.setImageURI(filePath.toUri().getPath());
-            image.setMediaType(file.getContentType());
-            image.setFileSize(file.getSize());
-
-            return imageRepository.save(image);
-        }
-        return null;
+        image.setFileSize(file.getSize());
+        image.setMediaType(file.getContentType());
+        image.setData(generateDataForDB(file));
+        return imageRepository.save(image);
     }
 
     @Override
@@ -67,5 +38,23 @@ public class ImageServiceImpl implements ImageService {
 
     private String getExtension(String originalFilename) {
         return originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+    }
+
+    private byte[] generateDataForDB(MultipartFile file) throws IOException {
+        try (
+                InputStream is = file.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is, 2048);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream()
+                ) {
+            BufferedImage image = ImageIO.read(bis);
+            int height = image.getHeight() / (image.getWidth() / 100);
+            BufferedImage preview = new BufferedImage(100, height, image.getType());
+            Graphics2D graphics2D = preview.createGraphics();
+            graphics2D.drawImage(image, 0, 0, 100, height, null);
+            graphics2D.dispose();
+
+            ImageIO.write(preview, getExtension(Objects.requireNonNull(file.getOriginalFilename())), baos);
+            return baos.toByteArray();
+        }
     }
 }
