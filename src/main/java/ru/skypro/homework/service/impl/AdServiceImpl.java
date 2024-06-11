@@ -78,6 +78,6 @@ public class AdServiceImpl implements AdService {
     public String[] updateImage(int id, MultipartFile image) throws IOException {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
         ad.setImage(imageService.uploadImage(image));
-        return new String[] {adRepository.save(ad).getImage().getId() + ""};
+        return new String[] {"/image/" + adRepository.save(ad).getImage().getId()};
     }
 }

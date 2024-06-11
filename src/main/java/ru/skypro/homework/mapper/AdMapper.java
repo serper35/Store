@@ -13,7 +13,7 @@ public class AdMapper {
     public AdDTO modelToAdDTO(Ad model) {
         return new AdDTO(
                 model.getAuthor().getId(),
-                model.getImage().getId() + "",
+                "/image/" + model.getImage().getId(),
                 model.getPk(),
                 model.getPrice(),
                 model.getTitle()
@@ -32,7 +32,7 @@ public class AdMapper {
                 author.getLastName(),
                 model.getDescription(),
                 author.getEmail(),
-                image.getId() + "",
+                "/image/" + image.getId(),
                 author.getPhone(),
                 model.getPrice(),
                 model.getTitle()
