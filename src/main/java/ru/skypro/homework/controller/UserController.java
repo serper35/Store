@@ -16,6 +16,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("users")
+@CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 public class UserController {
 
