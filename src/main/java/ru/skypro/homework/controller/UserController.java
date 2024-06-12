@@ -12,12 +12,15 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.model.User;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper mapper;
 
     //    Обновление пароля (200/401)
     //    Почему image - это String? Возможно потому, что это json?
@@ -27,11 +30,8 @@ public class UserController {
     }
 
     //    Получение информации об авторизованном пользователе (200/401)
-    //    Есть dto Register, который уже имеет все поля, созданные мною в классе User. А нужен ли User?
-    //    А может User должен содержать в себе Register? (не логично, но все же)
     @GetMapping("me")
     public ResponseEntity<UserDTO> getMe() {
-        UserMapper mapper = new UserMapper();
         UserDTO userDTO = mapper.mapToUserDTO(userService.getMe());
         return ResponseEntity.ok(userDTO);
     }
@@ -45,7 +45,12 @@ public class UserController {
     // Обновление аватара авторизованного пользователя (200/401)
     @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> setAvatar(@RequestBody MultipartFile avatar) {
-
+        String username = userService.getMe().getEmail();
+        try {
+            userService.updateAvatar(username, avatar);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return ResponseEntity.status(200).build();
     }
 
