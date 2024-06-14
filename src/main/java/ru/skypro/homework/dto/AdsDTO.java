@@ -9,5 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class AdsDTO {
     private int count;
-    private List<AdDTO> result;
+    private List<AdDTO> results;
 }

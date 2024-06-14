@@ -47,10 +47,9 @@ public class ImageServiceImpl implements ImageService {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream()
                 ) {
             BufferedImage image = ImageIO.read(bis);
-            int height = image.getHeight() / (image.getWidth() / 100);
-            BufferedImage preview = new BufferedImage(100, height, image.getType());
+            BufferedImage preview = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
             Graphics2D graphics2D = preview.createGraphics();
-            graphics2D.drawImage(image, 0, 0, 100, height, null);
+            graphics2D.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
             graphics2D.dispose();
 
             ImageIO.write(preview, getExtension(Objects.requireNonNull(file.getOriginalFilename())), baos);
