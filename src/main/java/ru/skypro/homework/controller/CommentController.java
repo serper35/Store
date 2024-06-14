@@ -43,4 +43,29 @@ public class CommentController {
 
         return ResponseEntity.ok(commentDTO);
     }
+
+    @PatchMapping("/{commentId}")
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable("id") int id,
+                                                    @PathVariable("commentId") int commentId,
+                                                    Authentication authentication,
+                                                    @RequestBody CreateOrUpdateCommentDTO comment) {
+        int adId = adController.getAds(id, authentication).getBody().getPk();
+
+        CommentDTO commentDTO = commentService.updateComment(adId, commentId, comment);
+
+        return ResponseEntity.ok(commentDTO);
+    }
+
+    @DeleteMapping("/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable("id") int id,
+                                                    @PathVariable("commentId") int commentId,
+                                                    Authentication authentication) {
+        int adId = adController.getAds(id, authentication).getBody().getPk();
+
+        commentService.deleteComment(adId, commentId);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 }
