@@ -24,16 +24,14 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     private CommentMapper commentMapper;
     private UserService userService;
-
-    private AdService adService;
-    private AdMapper adMapper;
-
     private AdRepository adRepository;
 
 
-    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper) {
+    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper, UserService userService, AdRepository adRepository) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
+        this.userService = userService;
+        this.adRepository = adRepository;
     }
 
     @Override
@@ -51,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO addComment(int adId, String userName, CreateOrUpdateCommentDTO text) {
         Comment comment = new Comment();
 
-        comment.setCreatedAt((int) Instant.now().toEpochMilli());
+        comment.setCreatedAt(Instant.now().toEpochMilli());
         comment.setText(text.getText());
         comment.setAd(adRepository.findById(adId).orElseThrow());
         comment.setAuthor(userService.getUser(userName));
@@ -66,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentRepository.findById(commentId).orElseThrow();
         if (comment.getAd().getPk() == adId) {
             comment.setText(text.getText());
-            comment.setCreatedAt((int) Instant.now().toEpochMilli());
+            comment.setCreatedAt(Instant.now().toEpochMilli());
         }
 
         commentRepository.save(comment);

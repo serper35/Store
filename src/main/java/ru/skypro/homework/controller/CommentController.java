@@ -29,6 +29,7 @@ public class CommentController {
 
         assert ad != null;
         CommentsDTO commentsDTO = commentService.getComments(ad.getPk());
+
         return ResponseEntity.ok(commentsDTO);
     }
 

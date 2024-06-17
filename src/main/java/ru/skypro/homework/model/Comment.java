@@ -17,7 +17,7 @@ public class Comment {
 
     private String text;
 
-    private int createdAt;
+    private long createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

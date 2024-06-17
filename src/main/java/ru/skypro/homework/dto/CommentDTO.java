@@ -15,7 +15,7 @@ public class CommentDTO {
     private String authorFirstName;
 
     /*дата и время создания комментария в миллисекундах с 00:00:00 01.01.1970*/
-    private int createdAt;
+    private long createdAt;
 
     /*id комментария*/
     private int pk;

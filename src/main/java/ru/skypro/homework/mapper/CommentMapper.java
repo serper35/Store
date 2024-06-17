@@ -9,6 +9,8 @@ import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.UserRepository;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 @Component
