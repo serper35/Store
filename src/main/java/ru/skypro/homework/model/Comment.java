@@ -26,12 +26,4 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id")
     private Ad ad;
-
-//    @OneToOne
-//    @JoinColumn(name = "image_id")
-//    private Image authorImage;
-//
-//    @OneToOne
-//    @JoinColumn(name = "user_firstName")
-//    private String authorFirstName;
 }

@@ -81,7 +81,4 @@ public class CommentServiceImpl implements CommentService {
 
         commentRepository.deleteById(comment.getPk());
     }
-
-
-
 }

@@ -9,7 +9,6 @@ import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
 import ru.skypro.homework.service.CommentService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/ads/{id}/comments")
