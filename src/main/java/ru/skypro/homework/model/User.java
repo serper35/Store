@@ -3,13 +3,8 @@ package ru.skypro.homework.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.skypro.homework.dto.Role;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Entity(name = "users")
@@ -30,4 +25,19 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "pk", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Ad> ads;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role=" + role +
+                ", image='" + image + '\'' +
+                ", adsSize='" + ads.size() + '\'' +
+                '}';
+    }
 }

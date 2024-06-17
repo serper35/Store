@@ -2,7 +2,6 @@ package ru.skypro.homework.mapper;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.model.User;
@@ -21,9 +20,10 @@ public class UserMapper {
         userDTO.setLastName(user.getLastName());
         userDTO.setPhone(user.getPhone());
         userDTO.setRole(user.getRole());
-        userDTO.setImage(user.getImage());
+        userDTO.setImage("/users/image/" + user.getId());
         return userDTO;
     }
+
     public UpdateUser mapToUpdateUser(User user) {
         UpdateUser updateUser = new UpdateUser();
         updateUser.setFirstName(user.getFirstName());
@@ -35,8 +35,8 @@ public class UserMapper {
     public UserDetailsDTO mapToUserDetailsDTO(User user) {
         Collection<? extends GrantedAuthority> authorities =
                 Arrays.stream(user.getRole().name().split(", "))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
         UserDetailsDTO userDetails = new UserDetailsDTO();
         userDetails.setUsername(user.getEmail());
         userDetails.setPassword(user.getPassword());

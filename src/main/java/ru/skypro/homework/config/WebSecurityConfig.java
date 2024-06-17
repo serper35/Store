@@ -13,14 +13,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.skypro.homework.mapper.UserMapper;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.impl.UserDetailsServiceImpl;
 
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig {
-    private final UserService userService;
     private final UserMapper mapper;
+    private final UserRepository repository;
 
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
@@ -34,7 +34,7 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl(userService, mapper);
+        return new UserDetailsServiceImpl(repository, mapper);
     }
 
     @Bean
