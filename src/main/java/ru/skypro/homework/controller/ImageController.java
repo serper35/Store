@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.model.Image;
 import ru.skypro.homework.service.ImageService;
+import ru.skypro.homework.service.UserService;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -18,6 +19,7 @@ import ru.skypro.homework.service.ImageService;
 public class ImageController {
 
     private final ImageService imageService;
+    private final UserService userService;
 
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable int id) {
