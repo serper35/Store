@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class AdServiceImpl implements AdService {
 
     private final AdRepository adRepository;
@@ -46,6 +48,7 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public ExtendedAdDTO getAds(int id) {
+        log.info("getAds with {}. ", id);
         return adMapper.modelToExtendedAdDTO(adRepository.findById(id).orElseThrow(AdNotFoundException::new));
     }
 

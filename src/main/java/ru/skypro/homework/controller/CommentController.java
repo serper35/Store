@@ -11,10 +11,11 @@ import ru.skypro.homework.service.CommentService;
 
 
 @RestController
+@CrossOrigin(value = "http://localhost:3000")
 @RequestMapping("/ads/{id}/comments")
 public class CommentController {
-    private CommentService commentService;
-    private AdController adController;
+    private final CommentService commentService;
+    private final AdController adController;
 
     public CommentController(CommentService commentService, AdController adController) {
         this.commentService = commentService;

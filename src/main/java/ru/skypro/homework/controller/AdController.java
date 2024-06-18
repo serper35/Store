@@ -28,7 +28,7 @@ public class AdController {
 
     @GetMapping
     public ResponseEntity<AdsDTO> getAllAds() {
-        return ResponseEntity.ok(adService.getAllAds());
+        log.info("ADSDTO: {}", adService.getAllAds().toString()); return ResponseEntity.ok(adService.getAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -45,8 +45,9 @@ public class AdController {
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDTO> getAds(@PathVariable int id, Authentication authentication) {
         if (authentication.isAuthenticated()) {
-            if (adService.getAds(id) != null) {
-                return ResponseEntity.ok().build();
+            ExtendedAdDTO extendedAdDTO = adService.getAds(id);
+            if (extendedAdDTO != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(extendedAdDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
@@ -72,9 +73,9 @@ public class AdController {
         }
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AdDTO> updateAds(@PathVariable int id,
-                                           @RequestParam CreateOrUpdateAdDTO properties,
+                                           @RequestBody CreateOrUpdateAdDTO properties,
                                            Authentication authentication) {
         if (authentication.isAuthenticated()) {
             ExtendedAdDTO foundAd = adService.getAds(id);
