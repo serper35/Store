@@ -1,15 +1,15 @@
 package ru.skypro.homework.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
-import ru.skypro.homework.exception.ImageNotFoundException;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.service.UserService;
 
@@ -44,29 +44,13 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(user));
     }
 
-    // Обновление аватара авторизованного пользователя (200/401)
     @PatchMapping(value = "me/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> setAvatar(@RequestParam @RequestBody MultipartFile image) {
-        String username = userService.getMe().getEmail();
-        try {
-            userService.updateAvatar(username, image);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return ResponseEntity.status(200).build();
+    public ResponseEntity<Void> setImage(@RequestParam @RequestBody MultipartFile image,
+                                          Authentication authentication) throws IOException {
+        if (authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            userService.updateImage(username, image);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } else return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
-
-    @GetMapping("/image/{userId}")
-    public ResponseEntity<byte[]> getImage(@PathVariable int userId) {
-        try {
-            byte[] avatar = userService.getImage(userId);
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(userService.getImageMediatype(userId));
-            httpHeaders.setContentLength(avatar.length);
-            return ResponseEntity.status(200).headers(httpHeaders).body(avatar);
-        } catch (IOException | ImageNotFoundException | NullPointerException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
 }
