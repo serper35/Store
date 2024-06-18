@@ -3,6 +3,7 @@ package ru.skypro.homework.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.transaction.annotation.Transactional;
 import ru.skypro.homework.dto.Role;
 
 import java.util.List;
@@ -21,7 +22,9 @@ public class User {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
-    private String image;
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
     @JsonIgnore
     @OneToMany(mappedBy = "pk", cascade = CascadeType.ALL, orphanRemoval = false)
     private List<Ad> ads;
@@ -36,7 +39,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", role=" + role +
-                ", image='" + image + '\'' +
+                ", imageId='" + image.getId() + '\'' +
                 ", adsSize='" + ads.size() + '\'' +
                 '}';
     }

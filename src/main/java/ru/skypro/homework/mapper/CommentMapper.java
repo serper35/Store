@@ -35,7 +35,7 @@ public class CommentMapper {
         dto.setAuthor(comment.getAuthor().getId());
         dto.setAuthorFirstName(comment.getAuthor().getFirstName());
         dto.setText(comment.getText());
-        dto.setAuthorImage(comment.getAuthor().getImage());
+        dto.setAuthorImage("/image/" + comment.getAuthor().getImage().getId());
         dto.setCreatedAt(comment.getCreatedAt());
 
         return dto;

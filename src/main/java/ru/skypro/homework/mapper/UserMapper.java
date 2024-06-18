@@ -20,7 +20,9 @@ public class UserMapper {
         userDTO.setLastName(user.getLastName());
         userDTO.setPhone(user.getPhone());
         userDTO.setRole(user.getRole());
-        userDTO.setImage("/users/image/" + user.getId());
+        if (user.getImage() != null) {
+            userDTO.setImage("/image/" + user.getImage().getId());
+        }
         return userDTO;
     }
 
