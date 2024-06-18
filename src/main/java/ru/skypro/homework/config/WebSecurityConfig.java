@@ -3,6 +3,7 @@ package ru.skypro.homework.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -52,6 +53,7 @@ public class WebSecurityConfig {
                         authorization ->
                                 authorization
                                         .requestMatchers(AUTH_WHITELIST).permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/ads", "/image/**").permitAll()
                                         .requestMatchers("/ads/**", "/users/**").authenticated())
                 .rememberMe(Customizer.withDefaults())
                 .cors(Customizer.withDefaults())
