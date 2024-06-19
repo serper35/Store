@@ -1,5 +1,10 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +26,20 @@ public class ImageController {
     private final ImageService imageService;
     private final UserService userService;
 
+    @Operation(
+            tags = "Изображение",
+            summary = "Получение изображения",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                                    array = @ArraySchema(schema = @Schema(implementation = byte[].class))
+                            )
+                    )
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable int id) {
         Image image = imageService.getImage(id);
