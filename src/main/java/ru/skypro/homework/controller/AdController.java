@@ -28,7 +28,7 @@ public class AdController {
 
     @GetMapping
     public ResponseEntity<AdsDTO> getAllAds() {
-        log.info("ADSDTO: {}", adService.getAllAds().toString()); return ResponseEntity.ok(adService.getAllAds());
+        return ResponseEntity.ok(adService.getAllAds());
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

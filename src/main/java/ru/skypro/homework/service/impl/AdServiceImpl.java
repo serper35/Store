@@ -43,6 +43,7 @@ public class AdServiceImpl implements AdService {
     public AdDTO add(CreateOrUpdateAdDTO properties, MultipartFile image, String email) throws IOException {
         Ad ad = adMapper.createOrUpdateAdDTOToAd(properties);
         ad.setImage(imageService.uploadImage(image));
+        ad.setAuthor(userService.getUser(email));
         return adMapper.modelToAdDTO(adRepository.save(ad));
     }
 
