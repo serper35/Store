@@ -3,6 +3,7 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.AdsDTO;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 @Slf4j
 public class AdServiceImpl implements AdService {
 
@@ -42,6 +44,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdDTO add(CreateOrUpdateAdDTO properties, MultipartFile image, String email) throws IOException {
         Ad ad = adMapper.createOrUpdateAdDTOToAd(properties);
+        ad.setAuthor(userService.getUser(email));
         ad.setImage(imageService.uploadImage(image));
         return adMapper.modelToAdDTO(adRepository.save(ad));
     }
