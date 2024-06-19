@@ -46,6 +46,7 @@ public class AdServiceImpl implements AdService {
         Ad ad = adMapper.createOrUpdateAdDTOToAd(properties);
         ad.setAuthor(userService.getUser(email));
         ad.setImage(imageService.uploadImage(image));
+        ad.setAuthor(userService.getUser(email));
         return adMapper.modelToAdDTO(adRepository.save(ad));
     }
 
