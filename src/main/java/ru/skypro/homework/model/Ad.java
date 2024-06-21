@@ -3,6 +3,8 @@ package ru.skypro.homework.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "ads")
 @Data
@@ -24,6 +26,8 @@ public class Ad {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User author;
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Comment> comments;
 
     public Ad(User author, String title, int price, String description) {
         this.author = author;
