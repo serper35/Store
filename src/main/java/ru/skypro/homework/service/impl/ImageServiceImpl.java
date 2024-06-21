@@ -36,6 +36,11 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.findById(id).orElseThrow(ImageNotFoundException::new);
     }
 
+    @Override
+    public void deleteImage(int id) {
+        imageRepository.deleteById(id);
+    }
+
     private String getExtension(String originalFilename) {
         return originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
     }

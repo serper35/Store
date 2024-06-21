@@ -88,6 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String username) {
         logger.info("Invoked method deleteUser({})", username);
+        imageService.deleteImage(getUser(username).getImage().getId());
         userRepository.delete(getUser(username));
     }
 
