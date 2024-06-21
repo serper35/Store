@@ -1,7 +1,6 @@
 package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -29,7 +28,6 @@ public class UserController {
     private final UserService userService;
     private final UserMapper mapper;
 
-    //    Обновление пароля (200/401)
     @Operation(
             tags = "Пользователи",
             summary = "Обновление пароля",
@@ -57,7 +55,6 @@ public class UserController {
         return ResponseEntity.status(200).build();
     }
 
-    //    Получение информации об авторизованном пользователе (200/401)
     @Operation(
             tags = "Пользователи",
             summary = "Получение информации об авторизованном пользователе",
@@ -83,7 +80,6 @@ public class UserController {
         return ResponseEntity.ok(userDTO);
     }
 
-    // Обновление информации об авторизованном пользователе (200/401)
     @Operation(
             tags = "Пользователи",
             summary = "Обновление информации об авторизованном пользователе",

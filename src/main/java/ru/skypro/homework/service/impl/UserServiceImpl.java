@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -88,8 +85,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String username) {
         logger.info("Invoked method deleteUser({})", username);
-        imageService.deleteImage(getUser(username).getImage().getId());
-        userRepository.delete(getUser(username));
+        User user = getUser(username);
+        if (user.getImage() != null) {
+            imageService.deleteImage(user.getImage().getId());
+        }
+        userRepository.delete(user);
     }
 
     @Override
