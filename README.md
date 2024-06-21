@@ -23,10 +23,10 @@ docker run -p 3000:3000 --rm ghcr.io/dmitry-bizin/front-react-avito:v1.21
 При разработке проекта использовались следующие инструменты и технологии (библиотеки):
 - IntelliJ IDEA
 - Java 17
-- [Java Telegram Bot API (версия 7.1.0)](https://github.com/pengrad/java-telegram-bot-api)
 - SpringBoot (версия 3.3.0)
+- Spring Security
 - Swagger
-- Liquibase
+- mapStruct
 - Postgresql
 - Docker (запуск фронтенда)
 - Сборка с помощью Maven
