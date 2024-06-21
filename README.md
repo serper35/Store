@@ -27,6 +27,7 @@ docker run -p 3000:3000 --rm ghcr.io/dmitry-bizin/front-react-avito:v1.21
 - Spring Security
 - Swagger
 - mapStruct
+- liquibase
 - Postgresql
 - Docker (запуск фронтенда)
 - Сборка с помощью Maven
