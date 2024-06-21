@@ -13,6 +13,7 @@ import ru.skypro.homework.exception.AdNotFoundException;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.repository.AdRepository;
+import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
@@ -58,6 +59,8 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public void removeAd(int id) {
+        Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
+        imageService.deleteImage(ad.getImage().getId());
         adRepository.deleteById(id);
     }
 
