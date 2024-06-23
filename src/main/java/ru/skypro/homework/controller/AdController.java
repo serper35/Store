@@ -52,7 +52,7 @@ public class AdController {
 
     @Operation(
             tags = "Объявления",
-            summary = "Добавление объявление",
+            summary = "Добавление объявления",
             responses = {
                     @ApiResponse(
                             responseCode = "201",

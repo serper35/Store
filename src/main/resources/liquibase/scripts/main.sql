@@ -34,5 +34,5 @@ CREATE TABLE IF NOT EXISTS public.users
      password character varying(255) NOT NULL,
      phone character varying(30) NOT NULL,
      role character varying(255) NOT NULL,
-     image_id integer NOT NULL
+     image_id integer
 );

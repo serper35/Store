@@ -1,59 +1,50 @@
 package ru.skypro.homework.mapper;
 
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.Named;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.*;
+import ru.skypro.homework.model.Image;
 import ru.skypro.homework.model.User;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-@Component
-public class UserMapper {
-    public UserDTO mapToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setPhone(user.getPhone());
-        userDTO.setRole(user.getRole());
-        if (user.getImage() != null) {
-            userDTO.setImage("/image/" + user.getImage().getId());
-        }
-        return userDTO;
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public interface UserMapper {
+    @Mapping(target = "image", source = "image",
+            conditionExpression = "java(hasImage(user))",
+            qualifiedByName = "imageToString")
+    UserDTO mapToUserDTO(User user);
+
+    UpdateUser mapToUpdateUser(User user);
+
+    @Mapping(target = "username", source = "email")
+    @Mapping(target = "authorities", source = "role", qualifiedByName = "roleToAuthorities")
+    UserDetailsDTO mapToUserDetailsDTO(User user);
+
+    @Mapping(target = "email", source = "username")
+    User mapToUser(Register register);
+
+    @Named("hasImage")
+    default boolean hasImage(User user) {
+        return user.getImage() != null;
     }
 
-    public UpdateUser mapToUpdateUser(User user) {
-        UpdateUser updateUser = new UpdateUser();
-        updateUser.setFirstName(user.getFirstName());
-        updateUser.setLastName(user.getLastName());
-        updateUser.setPhone(user.getPhone());
-        return updateUser;
+    @Named("imageToString")
+    default String imageToString(Image image) {
+        return "/image/" + image.getId();
     }
 
-    public UserDetailsDTO mapToUserDetailsDTO(User user) {
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(user.getRole().name().split(", "))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-        UserDetailsDTO userDetails = new UserDetailsDTO();
-        userDetails.setUsername(user.getEmail());
-        userDetails.setPassword(user.getPassword());
-        userDetails.setAuthorities(authorities);
-        return userDetails;
-    }
+    @Named("roleToAuthorities")
+    default Collection<? extends GrantedAuthority> roleToAuthorities(Role role) {
 
-    public User mapToUser(Register register) {
-        User user = new User();
-        user.setEmail(register.getUsername());
-        user.setFirstName(register.getFirstName());
-        user.setLastName(register.getLastName());
-        user.setPassword(register.getPassword());
-        user.setPhone(register.getPhone());
-        user.setRole(register.getRole());
-        return user;
+        return Arrays.stream(role.name().split(", "))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }

@@ -5,6 +5,8 @@ import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateAdDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
+import ru.skypro.homework.model.Ad;
+import ru.skypro.homework.model.User;
 
 import java.io.IOException;
 
@@ -22,5 +24,7 @@ public interface AdService {
     AdsDTO getAdsMe(String email);
 
     String[] updateImage(int id, MultipartFile image) throws IOException;
+
+    Ad findById(int pk);
 }
 
