@@ -1,7 +1,6 @@
 package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +12,7 @@ import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.CommentsDTO;
 import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
 import ru.skypro.homework.dto.ExtendedAdDTO;
+import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.CommentService;
 
 
@@ -21,11 +21,11 @@ import ru.skypro.homework.service.CommentService;
 @RequestMapping("/ads/{id}/comments")
 public class CommentController {
     private final CommentService commentService;
-    private final AdController adController;
+    private final AdService adService;
 
-    public CommentController(CommentService commentService, AdController adController) {
+    public CommentController(CommentService commentService, AdService adService) {
         this.commentService = commentService;
-        this.adController = adController;
+        this.adService = adService;
     }
 
     @Operation(
@@ -53,9 +53,8 @@ public class CommentController {
             }
     )
     @GetMapping()
-    public ResponseEntity<CommentsDTO> getAllComments(@PathVariable int id,
-                                                      Authentication authentication) {
-        ExtendedAdDTO ad = adController.getAds(id, authentication).getBody();
+    public ResponseEntity<CommentsDTO> getAllComments(@PathVariable int id) {
+        ExtendedAdDTO ad = adService.getAds(id);
 
         assert ad != null;
         CommentsDTO commentsDTO = commentService.getComments(ad.getPk());
@@ -92,7 +91,7 @@ public class CommentController {
                                                  Authentication authentication,
                                                  @RequestBody CreateOrUpdateCommentDTO comment) {
 
-        int adId = adController.getAds(id, authentication).getBody().getPk();
+        int adId = adService.getAds(id).getPk();
 
         CommentDTO commentDTO = commentService.addComment(adId, authentication.getName(), comment);
 
@@ -128,9 +127,8 @@ public class CommentController {
     @PatchMapping("/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(@PathVariable("id") int id,
                                                     @PathVariable("commentId") int commentId,
-                                                    Authentication authentication,
                                                     @RequestBody CreateOrUpdateCommentDTO comment) {
-        int adId = adController.getAds(id, authentication).getBody().getPk();
+        int adId = adService.getAds(id).getPk();
 
         CommentDTO commentDTO = commentService.updateComment(adId, commentId, comment);
 
@@ -168,9 +166,8 @@ public class CommentController {
     )
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable("id") int id,
-                                                    @PathVariable("commentId") int commentId,
-                                                    Authentication authentication) {
-        int adId = adController.getAds(id, authentication).getBody().getPk();
+                                              @PathVariable("commentId") int commentId) {
+        int adId = adService.getAds(id).getPk();
 
         commentService.deleteComment(adId, commentId);
 
