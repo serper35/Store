@@ -13,7 +13,6 @@ import ru.skypro.homework.exception.AdNotFoundException;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.model.Ad;
 import ru.skypro.homework.repository.AdRepository;
-import ru.skypro.homework.repository.ImageRepository;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.ImageService;
 import ru.skypro.homework.service.UserService;
@@ -89,5 +88,10 @@ public class AdServiceImpl implements AdService {
         Ad ad = adRepository.findById(id).orElseThrow(AdNotFoundException::new);
         ad.setImage(imageService.uploadImage(image));
         return new String[] {"/image/" + adRepository.save(ad).getImage().getId()};
+    }
+
+    @Override
+    public Ad findById(int pk) {
+        return adRepository.findById(pk).orElseThrow(AdNotFoundException::new);
     }
 }

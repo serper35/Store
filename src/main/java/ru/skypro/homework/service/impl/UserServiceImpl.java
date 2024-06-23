@@ -49,6 +49,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(int id) {
+        logger.info("Invoked method findById({})", id);
+        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User: " + id + " not found."));
+    }
+
+    @Override
     public void updateImage(String email, MultipartFile image) throws IOException, NoSuchElementException {
         logger.info("Invoked method updateImage for user: ({})", email);
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User: " + email + " not found."));

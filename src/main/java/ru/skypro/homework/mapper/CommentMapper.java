@@ -1,39 +1,36 @@
 package ru.skypro.homework.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.*;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.model.Comment;
 import ru.skypro.homework.model.User;
-import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.UserService;
 
+@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+public abstract class CommentMapper {
 
-@Component
-public class CommentMapper {
-    private UserRepository userRepository;
+    protected UserService userService;
+    protected AdService adService;
 
-    public Comment commentDtoToComment(CommentDTO dto) {
-        User author = userRepository.findById(dto.getAuthor()).orElseThrow();
-        Comment comment = new Comment();
-        comment.setPk(dto.getPk());
-        comment.setAuthor(author);
-        comment.setText(dto.getText());
-        comment.setCreatedAt(dto.getCreatedAt());
+    @Mapping(target = "author", expression = "java(userService.findById(dto.getAuthor()))")
+    @Mapping(target = "ad", expression = "java(adService.findById(dto.getPk()))")
+    public abstract Comment commentDtoToComment(CommentDTO dto);
 
-        return comment;
+    @Mapping(target = "author", expression = "java(comment.getAuthor().getId())")
+    @Mapping(target = "authorFirstName", expression = "java(comment.getAuthor().getFirstName())")
+    @Mapping(target = "authorImage", source = "author",
+            conditionExpression = "java(hasImage(comment.getAuthor()))",
+            qualifiedByName = "imageToString")
+    public abstract CommentDTO commentToCommentDTO(Comment comment);
+
+    @Named("hasImage")
+    boolean hasImage(User author) {
+        return author.getImage() != null;
     }
 
-    public CommentDTO commentToCommentDTO(Comment comment) {
-        CommentDTO dto = new CommentDTO();
-
-        dto.setPk(comment.getPk());
-        dto.setAuthor(comment.getAuthor().getId());
-        dto.setAuthorFirstName(comment.getAuthor().getFirstName());
-        dto.setText(comment.getText());
-        if (comment.getAuthor().getImage() != null) {
-            dto.setAuthorImage("/image/" + comment.getAuthor().getImage().getId());
-        }
-        dto.setCreatedAt(comment.getCreatedAt());
-
-        return dto;
+    @Named("imageToString")
+    String imageToString(User author) {
+        return "/image/" + author.getImage().getId();
     }
 }

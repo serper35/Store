@@ -14,6 +14,8 @@ public interface UserService {
 
     User getUser(String email);
 
+    User findById(int id);
+
     void updateImage(String email, MultipartFile file) throws IOException, NoSuchElementException;
 
     void createUser(Register register);
